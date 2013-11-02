@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>IWebQuery</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Yasir AlGuwaifli">
+    <link rel="stylesheet" href="content/css/uikit.css">
+    <link rel="stylesheet" href="content/css/app.css">
+    <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="uk-container uk-container-center uk-clearfix" style="margin-top: 45px;">
+      <div class="uk-grid">
+        <h1 style="font-size: 45px; margin-bottom: 75px;"><i class="uk-icon-archive"></i> IWeb URL indexer</h1>
+        <!-- alert boxes, hidden by default -->
+        <div id="alerts">
+        </div>
+        <!-- end of alert boxes -->
+        <div class="uk-width-2-10 effect8" style="padding: 0px;">
+          <!-- side nav -->
+          <div class="uk-panel uk-panel-box">
+            <h2 class="uk-panel-title"><i class="uk-icon-cogs"></i> Control panel</h2>
+            <ul class="uk-nav uk-nav-side">
+              <li class="uk-nav-divider"></li>
+            </ul>
+            <ul class="uk-nav uk-nav-side" data-uk-nav data-uk-switcher="{connect:'#forms'}">
+              <li class="uk-parent uk-active"><a href="#">Index Request</a></li>
+              <li class="uk-parent"><a href="#">Query</a></li>
+              <li class="uk-nav-divider"></li>
+            </ul>
+            <ul class="uk-nav uk-nav-side">
+              <li class="uk-text-center uk-text-info"><span style="font-size: 13px;">You have <span id="task_count" style="font-size: 15px;">0</span> unfinished request(s)</span></li>
+            </ul>
+          </div>
+          <!-- end side nav -->
+        </div>
+        <div class="uk-width-8-10">
+          <div class="uk-width-1-1 rounded-corners" style="word-wrap: break-word;">
+            <!-- control box -->
+            <section class="uk-text-large uk-text-justify" style="margin-top: 25px; overflow: auto; padding: 5px;">
+              <ul id="forms" class="uk-switcher">
+                <li>
+                  <h1 class="uk-panel-title" style="font-size: 25px;">Database index request</h1>
+                  <hr class="uk-article-divider" />
+                  <div style="margin-top: 25px;">
+                    <form id="dbconfig_form" class="uk-form uk-form-stacked">
+                      <fieldset>
+                        <div class="uk-form-row">
+                          <label style="font-weight: normal;" class="uk-form-label" for="url">Enter page URL</label>
+                          <input name="url" type="url" placeholder="Page(s) to be indexed" class="uk-form-large uk-form-width-large" required>
+                        </div>
+                        <div style="margin-top: 45px;" class="uk-form-row">
+                          <span class="uk-form-label">Database configuration</span>
+                          <span class="uk-text-small">Note: the indexing function will not work if the configuration is not correct</span>
+                        </div>
+                        <div class="uk-form-row">
+                          <label style="font-weight: normal;" class="uk-form-label" for="dbaddress">Enter DB URL</label>
+                          <input name="dbaddress" type="text" placeholder="Database URL" class="uk-form-large uk-form-width-large" required>
+                        </div>
+                        <div class="uk-form-row">
+                          <label><input class="usr_pass_diable" type="checkbox"> DB does not have user/password</label>
+                        </div>
+                        <div id="db_config_fields" class="uk-form-row">
+                          <div class="uk-form-row">
+                            <label style="font-weight: normal;" class="uk-form-label" for="dbuser">Enter DB username</label>
+                            <input name="dbuser" type="text" placeholder="Database username" class="uk-form-large uk-form-width-large" required>
+                          </div>
+                          <div class="uk-form-row">
+                            <label style="font-weight: normal;" class="uk-form-label" for="dbpassword">Enter DB password</label>
+                            <input name="dbpassword" type="password" placeholder="Database password" class="uk-form-large uk-form-width-large" required>
+                          </div>
+                        </div>
+                        <hr class="uk-article-divider" />
+                        <div class="uk-form-row uk-align-center">
+                          <button id="canceldb" class="uk-button uk-button-large uk-button-danger" type="button">Cancel</button>
+                          <button id="submitdb" class="uk-button uk-button-large uk-button-primary" style="margin-left: 50px;" type="submit">Submit</button>
+                        </div>
+                      </fieldset>
+                    </form>
+                  </div>
+                </li>
+                <li>
+                  <h1 class="uk-panel-title" style="font-size: 25px;">Query indexed URLs</h1>
+                  <hr class="uk-article-divider">
+                  <div style="margin-top: 25px;">
+                    <form id="query_form" class="uk-form uk-form-stacked">
+                      <fieldset>
+                        <div class="uk-form-row">
+                          <label style="font-weight: normal;" class="uk-form-label" for="keywords">Keyword(s)</label>
+                          <input name="keywords" type="text" placeholder="Page(s) to be indexed" class="uk-form-large uk-form-width-large" required>
+                          <button id="submitdb" class="uk-button uk-button-large uk-button-primary" style="margin-left: 25px;" type="submit"><i class="uk-icon-search" style="padding-left: 10px;  padding-right: 10px;"></i></button>
+                        </div>
+                        <hr class="uk-article-divider" />
+                      </fieldset>
+                    </form>
+                    <div id="results">
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </section>
+            <!-- end control box -->
+            <div id="loading" class="overlay hide">
+              <div id="msg"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="content/js/jquery-2.0.3.min.js"></script>
+    <script src="content/js/jquery.validate.min.js"></script>
+    <script src="content/js/mustache.js"></script>
+    <script src="content/js/uikit.min.js"></script>
+    <script src="content/js/spin.min.js"></script>
+    <script type="text/html" id="keyword_result">
+      <div class="uk-panel uk-panel-box">
+          		<h3 class="uk-panel-title">Title: </h3>{{title}}
+          		<h3 class="uk-panel-title">Url: </h3><a href="{{url}}">{{url}}</a> 
+          		<h3 class="uk-panel-title">Text: </h3>{{text}}
+      </div>
+        
+    </script>
+    <script src="content/js/app.js"></script>
+  </body>
+</html>
